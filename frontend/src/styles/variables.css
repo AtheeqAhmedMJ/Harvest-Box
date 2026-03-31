@@ -1,0 +1,64 @@
+/* ============================================================
+   DESIGN TOKENS — single source of truth
+   ============================================================ */
+:root {
+  /* Backgrounds */
+  --bg-main:        #edf1ed;
+  --bg-clay:        #e3e8e3;
+  --bg-clay-light:  #f0f4f0;
+  --bg-card:        #ffffff;
+
+  /* Accents */
+  --accent-green:   #3a7d44;
+  --accent-green-2: #4caf50;
+  --accent-yellow:  #f9a825;
+  --accent-red:     #e53935;
+  --accent-blue:    #2563eb;
+
+  /* Text */
+  --text-dark:      #1a2e1a;
+  --text-muted:     #5f6d5f;
+  --text-faint:     #9aaa9a;
+
+  /* Shadows — clay/neumorphic */
+  --shadow-raised:
+    12px 12px 24px rgba(0,0,0,0.13),
+    -12px -12px 24px rgba(255,255,255,0.92);
+  --shadow-pressed:
+    inset 8px 8px 16px rgba(0,0,0,0.14),
+    inset -8px -8px 16px rgba(255,255,255,0.88);
+  --shadow-card:
+    0 2px 8px rgba(0,0,0,0.06),
+    0 8px 24px rgba(0,0,0,0.05);
+  --shadow-card-hover:
+    0 4px 16px rgba(0,0,0,0.1),
+    0 16px 40px rgba(0,0,0,0.08);
+
+  /* Radius */
+  --r-xl: 24px;
+  --r-lg: 18px;
+  --r-md: 12px;
+  --r-sm: 8px;
+
+  /* Motion */
+  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:   cubic-bezier(0.4, 0, 1, 1);
+  --ease:      cubic-bezier(0.4, 0, 0.2, 1);
+  --t-fast:    0.15s;
+  --t-mid:     0.25s;
+  --t-slow:    0.4s;
+
+  /* Sidebar */
+  --sidebar-w:        85px;
+  --sidebar-expanded: 240px;
+
+  /* Chart colors */
+  --chart-temp: #d97706;
+  --chart-hum:  #3a7d44;
+  --chart-wind: #2563eb;
+
+  /* Rain */
+  --rain-high: #2563eb;
+  --rain-mid:  #60a5fa;
+  --rain-low:  #bfdbfe;
+}

@@ -1,0 +1,77 @@
+version: "3.9"
+
+# ─── Production stack (PostgreSQL) ────────────────────────────
+# Usage:
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# All secrets MUST be set in environment / .env file — never commit .env.
+
+services:
+
+  # ── PostgreSQL ───────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: agripulse-db
+    environment:
+      POSTGRES_DB:       ${POSTGRES_DB:-agripulse}
+      POSTGRES_USER:     ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - agripulse-net
+
+  # ── Spring Boot app ──────────────────────────────────────────
+  app:
+    build: .
+    container_name: agripulse-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL:      jdbc:postgresql://postgres:5432/${POSTGRES_DB:-agripulse}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET:  ${JWT_SECRET}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      AWS_ACCESS_KEY_ID:     ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      S3_BUCKET:   ${S3_BUCKET}
+      ML_BASE_URL: ${ML_BASE_URL}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - agripulse-net
+
+  # ── NGINX reverse proxy ──────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: agripulse-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - agripulse-net
+
+volumes:
+  pgdata:
+
+networks:
+  agripulse-net:
+    driver: bridge

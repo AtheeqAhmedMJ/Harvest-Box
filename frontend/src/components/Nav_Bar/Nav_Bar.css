@@ -1,0 +1,100 @@
+/* ── Sidebar shell ── */
+.sidebar {
+  position: fixed;
+  top: 14px; left: 14px; bottom: 14px;
+  width: var(--sidebar-w);
+  background: var(--bg-clay);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-raised);
+  z-index: 1000;
+  overflow: hidden;
+  transition: width var(--t-mid) var(--ease-out);
+}
+.sidebar.expanded { width: var(--sidebar-expanded); }
+
+/* ── Nav list ── */
+.sidebar-nav {
+  display: flex; flex-direction: column;
+  gap: 4px;
+  padding: 14px 10px;
+  height: 100%;
+}
+
+/* ── Nav item ── */
+.nav-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 12px;
+  border-radius: var(--r-lg);
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: background var(--t-fast) var(--ease), color var(--t-fast);
+  white-space: nowrap;
+  position: relative;
+}
+.nav-item:hover {
+  background: rgba(58,125,68,0.1);
+  color: var(--accent-green);
+}
+.nav-item.active {
+  background: var(--accent-green);
+  color: white;
+  box-shadow: 0 4px 14px rgba(58,125,68,0.35);
+}
+
+/* ── Logo item ── */
+.logo-item {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  cursor: default;
+  color: var(--text-dark);
+}
+
+/* ── Icon wrapper ── */
+.nav-icon-wrap {
+  width: 44px; height: 44px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--r-md);
+  transition: background var(--t-fast);
+}
+.nav-icon-wrap svg {
+  width: 20px; height: 20px;
+  stroke: currentColor;
+  transition: transform var(--t-fast);
+}
+.nav-item:hover .nav-icon-wrap svg { transform: scale(1.08); }
+
+/* ── Label ── */
+.nav-label {
+  font-size: 0.875rem; font-weight: 500;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity var(--t-mid) var(--ease), transform var(--t-mid) var(--ease);
+  pointer-events: none;
+}
+.sidebar.expanded .nav-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Spacer ── */
+.nav-spacer { flex: 1; }
+
+/* ── Mobile: bottom bar ── */
+@media (max-width: 768px) {
+  .sidebar {
+    top: auto; bottom: 10px; left: 10px; right: 10px;
+    width: auto; height: 64px;
+    border-radius: var(--r-xl);
+  }
+  .sidebar-nav {
+    flex-direction: row; align-items: center;
+    justify-content: space-around;
+    padding: 0 8px; gap: 0;
+  }
+  .nav-item { padding: 8px 12px; flex-direction: column; gap: 2px; }
+  .nav-label { display: none; }
+  .logo-item { display: none; }
+  .nav-spacer { display: none; }
+  .nav-icon-wrap { width: 36px; height: 36px; }
+}

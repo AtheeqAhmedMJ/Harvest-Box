@@ -1,0 +1,147 @@
+.up-root { }
+.up-wrap { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+/* ── Page header ── */
+.up-page-header h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
+.up-page-header p  { font-size: 0.88rem; color: var(--text-muted); margin-top: 6px; }
+
+/* ── Skeleton ── */
+.up-skeleton { display: flex; flex-direction: column; gap: 10px; padding: 28px; background: var(--bg-clay); border-radius: var(--r-xl); box-shadow: var(--shadow-raised); }
+
+/* ── Error ── */
+.up-error {
+  display: flex; align-items: center; gap: 8px;
+  padding: 13px 16px; border-radius: var(--r-md);
+  background: rgba(229,57,53,0.07);
+  border: 1px solid rgba(229,57,53,0.2);
+  color: var(--accent-red); font-size: 13px;
+}
+
+/* ── Profile card ── */
+.up-profile-card {
+  padding: 28px;
+  display: flex; align-items: flex-start; gap: 22px;
+  animation: fade-up 0.35s var(--ease-out) both;
+  position: relative;
+}
+
+/* ── Avatar ── */
+.up-avatar {
+  width: 64px; height: 64px; flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent-green);
+  color: white;
+  font-size: 1.5rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(58,125,68,0.3);
+  letter-spacing: -0.01em;
+}
+
+/* ── Info block ── */
+.up-profile-info { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.up-name     { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
+.up-email    { font-size: 0.875rem; color: var(--text-muted); }
+.up-location {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;
+}
+
+/* ── Edit button ── */
+.up-edit-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--r-sm);
+  border: 1px solid rgba(0,0,0,0.1);
+  font-size: 0.82rem; font-weight: 500;
+  color: var(--text-muted);
+  transition: all var(--t-fast);
+  flex-shrink: 0;
+}
+.up-edit-btn:hover { border-color: var(--accent-green); color: var(--accent-green); background: rgba(58,125,68,0.05); }
+
+/* ── Edit form ── */
+.up-edit-form { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.up-edit-field { display: flex; flex-direction: column; gap: 5px; }
+.up-edit-field label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+.up-input {
+  padding: 10px 13px;
+  border-radius: var(--r-sm);
+  border: 1.5px solid transparent;
+  background: var(--bg-clay-light);
+  box-shadow: var(--shadow-pressed);
+  font-size: 0.9rem; color: var(--text-dark);
+  outline: none; width: 100%;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.up-input:focus {
+  border-color: var(--accent-green);
+  box-shadow: var(--shadow-pressed), 0 0 0 3px rgba(58,125,68,0.12);
+}
+.up-input::placeholder { color: var(--text-faint); }
+.up-edit-actions { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+.up-save-btn { }
+.up-cancel-btn {
+  font-size: 0.85rem; color: var(--text-muted);
+  padding: 8px 12px; border-radius: var(--r-sm);
+  transition: color var(--t-fast);
+}
+.up-cancel-btn:hover { color: var(--text-dark); }
+
+/* ── Save message ── */
+.up-save-msg {
+  padding: 10px 16px; border-radius: var(--r-sm);
+  font-size: 0.82rem; font-weight: 500;
+  animation: fade-up 0.2s ease;
+}
+.up-save-msg.success { background: rgba(58,125,68,0.08); color: var(--accent-green); border: 1px solid rgba(58,125,68,0.2); }
+.up-save-msg.error   { background: rgba(229,57,53,0.07); color: var(--accent-red);   border: 1px solid rgba(229,57,53,0.2); }
+
+/* ── Section label ── */
+.up-section-label { margin-top: 4px; }
+
+/* ── Stats ── */
+.up-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.up-stat-card { padding: 22px 20px; display: flex; flex-direction: column; gap: 5px; animation: fade-up 0.4s var(--ease-out) both; }
+.up-stat-val   { font-size: 2.4rem; font-weight: 200; letter-spacing: -0.04em; line-height: 1; }
+.up-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); }
+
+/* ── Logout ── */
+.up-logout-btn {
+  display: flex; align-items: center; gap: 8px;
+  align-self: flex-start;
+  padding: 10px 18px;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(229,57,53,0.3);
+  color: var(--accent-red);
+  font-size: 0.875rem; font-weight: 500;
+  transition: all var(--t-fast);
+  margin-top: 8px;
+}
+.up-logout-btn:hover { background: rgba(229,57,53,0.07); border-color: var(--accent-red); }
+
+/* ── Spinner reuse ── */
+.btn-spinner {
+  display: inline-block;
+  width: 13px; height: 13px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── Animations ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .up-stats { grid-template-columns: 1fr 1fr; }
+  .up-profile-card { flex-direction: column; }
+  .up-edit-btn { align-self: flex-start; }
+}
+@media (max-width: 400px) {
+  .up-stats { grid-template-columns: 1fr; }
+}

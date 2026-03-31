@@ -1,0 +1,512 @@
+[
+  {
+    "timestamp": "2026-03-30T12:46:21",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 3,
+    "prediction": "Powdery_Mildew",
+    "confidence": 47.21,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 3.43,
+      "Downy_Mildew": 46.34,
+      "Healthy": 3.02,
+      "Powdery_Mildew": 47.21
+    }
+  },
+  {
+    "timestamp": "2026-03-30T12:50:53",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 3,
+    "prediction": "Powdery_Mildew",
+    "confidence": 47.21,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 3.43,
+      "Downy_Mildew": 46.34,
+      "Healthy": 3.02,
+      "Powdery_Mildew": 47.21
+    }
+  },
+  {
+    "timestamp": "2026-03-30T12:54:31",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 3,
+    "prediction": "Powdery_Mildew",
+    "confidence": 47.21,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 3.43,
+      "Downy_Mildew": 46.34,
+      "Healthy": 3.02,
+      "Powdery_Mildew": 47.21
+    }
+  },
+  {
+    "timestamp": "2026-03-30T12:56:16",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 3,
+    "prediction": "Powdery_Mildew",
+    "confidence": 47.21,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 3.43,
+      "Downy_Mildew": 46.34,
+      "Healthy": 3.02,
+      "Powdery_Mildew": 47.21
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:27:19",
+    "user_id": "1",
+    "field_name": "",
+    "row": 1,
+    "col": 1,
+    "prediction": "Powdery_Mildew",
+    "confidence": 44.34,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 1.15,
+      "Downy_Mildew": 33.8,
+      "Healthy": 20.71,
+      "Powdery_Mildew": 44.34
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:33:05",
+    "user_id": "1",
+    "field_name": "",
+    "row": 1,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 44.34,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 1.15,
+      "Downy_Mildew": 33.8,
+      "Healthy": 20.71,
+      "Powdery_Mildew": 44.34
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:36:02",
+    "user_id": "1",
+    "field_name": "",
+    "row": 1,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 44.34,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 1.15,
+      "Downy_Mildew": 33.8,
+      "Healthy": 20.71,
+      "Powdery_Mildew": 44.34
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:37:15",
+    "user_id": "1",
+    "field_name": "",
+    "row": 1,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 44.34,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 1.15,
+      "Downy_Mildew": 33.8,
+      "Healthy": 20.71,
+      "Powdery_Mildew": 44.34
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:39:59",
+    "user_id": "1",
+    "field_name": "",
+    "row": 1,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 44.34,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 1.15,
+      "Downy_Mildew": 33.8,
+      "Healthy": 20.71,
+      "Powdery_Mildew": 44.34
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:44:18",
+    "user_id": "1",
+    "field_name": "",
+    "row": 1,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 44.34,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 1.15,
+      "Downy_Mildew": 33.8,
+      "Healthy": 20.71,
+      "Powdery_Mildew": 44.34
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:46:34",
+    "user_id": "1",
+    "field_name": "",
+    "row": 1,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:49:05",
+    "user_id": "1",
+    "field_name": "",
+    "row": 1,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:50:19",
+    "user_id": "1",
+    "field_name": "",
+    "row": 1,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:54:52",
+    "user_id": "1",
+    "field_name": "",
+    "row": 1,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:55:57",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:58:25",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T14:59:51",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T15:01:43",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T15:05:34",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T15:09:22",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T15:11:28",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T15:20:05",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T15:23:27",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T15:24:42",
+    "user_id": "1",
+    "field_name": "",
+    "row": 2,
+    "col": 2,
+    "prediction": "Powdery_Mildew",
+    "confidence": 94.88,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 5.05,
+      "Healthy": 0.07,
+      "Powdery_Mildew": 94.88
+    }
+  },
+  {
+    "timestamp": "2026-03-30T16:06:04",
+    "user_id": "2",
+    "field_name": "",
+    "row": 1,
+    "col": 1,
+    "prediction": "Powdery_Mildew",
+    "confidence": 44.34,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 1.15,
+      "Downy_Mildew": 33.8,
+      "Healthy": 20.71,
+      "Powdery_Mildew": 44.34
+    }
+  },
+  {
+    "timestamp": "2026-03-30T22:48:33",
+    "user_id": "2",
+    "field_name": "A",
+    "row": 2,
+    "col": 4,
+    "prediction": "Healthy",
+    "confidence": 99.99,
+    "severity": "none",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 0.0,
+      "Healthy": 99.99,
+      "Powdery_Mildew": 0.0
+    }
+  },
+  {
+    "timestamp": "2026-03-30T22:57:28",
+    "user_id": "2",
+    "field_name": "B",
+    "row": 4,
+    "col": 3,
+    "prediction": "Black_Rot",
+    "confidence": 99.14,
+    "severity": "high",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 99.14,
+      "Downy_Mildew": 0.14,
+      "Healthy": 0.65,
+      "Powdery_Mildew": 0.06
+    }
+  },
+  {
+    "timestamp": "2026-03-31T00:11:38",
+    "user_id": "2",
+    "field_name": "A",
+    "row": 1,
+    "col": 1,
+    "prediction": "Downy_Mildew",
+    "confidence": 80.8,
+    "severity": "medium",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 80.8,
+      "Healthy": 0.05,
+      "Powdery_Mildew": 19.15
+    }
+  },
+  {
+    "timestamp": "2026-03-31T00:24:51",
+    "user_id": "2",
+    "field_name": "A",
+    "row": 1,
+    "col": 1,
+    "prediction": "Healthy",
+    "confidence": 100.0,
+    "severity": "none",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 0.0,
+      "Healthy": 100.0,
+      "Powdery_Mildew": 0.0
+    }
+  },
+  {
+    "timestamp": "2026-03-31T00:29:46",
+    "user_id": "2",
+    "field_name": "A",
+    "row": 1,
+    "col": 1,
+    "prediction": "Healthy",
+    "confidence": 99.99,
+    "severity": "none",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 0.0,
+      "Healthy": 99.99,
+      "Powdery_Mildew": 0.0
+    }
+  }
+]

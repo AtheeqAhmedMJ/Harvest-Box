@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <springProfile name="dev">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+        <logger name="com.capstone.project" level="DEBUG"/>
+    </springProfile>
+
+    <springProfile name="prod">
+        <!-- Rolling file appender for production -->
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+            <!-- ✅ UPDATED PATH -->
+            <file>/var/log/harvest-box/app.log</file>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+                <!-- ✅ UPDATED PATH -->
+                <fileNamePattern>/var/log/harvest-box/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+
+                <timeBasedFileNamingAndTriggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>50MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+
+            <!-- Structured JSON-like log format -->
+            <encoder>
+                <pattern>{"time":"%d{ISO8601}","level":"%-5level","logger":"%logger{36}","thread":"%thread","msg":"%msg"}%n</pattern>
+            </encoder>
+        </appender>
+
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{ISO8601} %-5level [%thread] %logger{36} : %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <logger name="com.capstone.project" level="INFO"/>
+    </springProfile>
+
+</configuration>

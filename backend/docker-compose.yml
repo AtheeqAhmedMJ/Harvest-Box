@@ -1,0 +1,48 @@
+version: "3.9"
+
+# ─── Local development stack ───────────────────────────────────
+# Usage:
+#   docker compose up          → start everything
+#   docker compose up -d       → detached
+#   docker compose down -v     → stop + remove volumes
+#
+# The app runs with SPRING_PROFILES_ACTIVE=dev (H2) locally.
+# To test prod PostgreSQL mode locally, use docker-compose.prod.yml.
+
+services:
+
+  # ── Spring Boot app ──────────────────────────────────────────
+  app:
+    build: .
+    container_name: agripulse-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      # Override per-deployment in .env or CI secrets
+      JWT_SECRET: ${JWT_SECRET:-local_dev_secret_change_in_prod}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      S3_BUCKET: ${S3_BUCKET:-crop-health-monitoring-2026}
+      ML_BASE_URL: ${ML_BASE_URL:-http://ml-service:8000}
+    depends_on:
+      - ml-service
+    restart: unless-stopped
+    networks:
+      - agripulse-net
+
+  # ── ML service placeholder ───────────────────────────────────
+  # Replace with your actual ML service image
+  ml-service:
+    image: ${ML_IMAGE:-python:3.11-slim}
+    container_name: agripulse-ml
+    ports:
+      - "8000:8000"
+    networks:
+      - agripulse-net
+
+networks:
+  agripulse-net:
+    driver: bridge
