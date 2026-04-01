@@ -48,6 +48,9 @@ app = FastAPI(
     version="2.0.0",
     lifespan=lifespan,
 )
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
 
 # ── CORS ─────────────────────────────────────────────────────────────────────
 app.add_middleware(
