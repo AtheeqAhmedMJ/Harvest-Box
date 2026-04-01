@@ -17,18 +17,21 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * IP-based rate limiter on auth endpoints using Bucket4j.
  *
- * Auth routes: 10 requests / minute per IP.
- * Other routes: 120 requests / minute per IP.
+ * Auth routes:    10 requests / minute per IP.
+ * General routes: 120 requests / minute per IP.
  *
- * In production, replace the in-memory map with a Redis-backed
- * ProxyManager for multi-instance correctness.
+ * CORS preflight (OPTIONS) requests are passed through without consuming
+ * a token — browsers send a preflight before every credentialed request,
+ * so rate-limiting them causes 429s on the actual request that follows.
+ *
+ * In production with multiple instances, replace the in-memory maps with
+ * a Redis-backed ProxyManager for correctness across pods.
  */
 @Component
 public class RateLimitFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(RateLimitFilter.class);
 
-    // Separate buckets for auth vs general traffic
     private final Map<String, Bucket> authBuckets    = new ConcurrentHashMap<>();
     private final Map<String, Bucket> generalBuckets = new ConcurrentHashMap<>();
 
@@ -36,11 +39,19 @@ public class RateLimitFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest  httpReq  = (HttpServletRequest)  req;
-        HttpServletResponse httpRes  = (HttpServletResponse) res;
+        HttpServletRequest  httpReq = (HttpServletRequest)  req;
+        HttpServletResponse httpRes = (HttpServletResponse) res;
 
-        String ip      = getClientIp(httpReq);
-        String path    = httpReq.getRequestURI();
+        // ── CORS preflight: let it through without consuming a token ────────
+        // Browsers send OPTIONS before every credentialed cross-origin request.
+        // Blocking them here causes the actual request to fail with a 429.
+        if ("OPTIONS".equalsIgnoreCase(httpReq.getMethod())) {
+            chain.doFilter(req, res);
+            return;
+        }
+
+        String  ip     = getClientIp(httpReq);
+        String  path   = httpReq.getRequestURI();
         boolean isAuth = path.startsWith("/api/v1/auth");
 
         Bucket bucket = isAuth

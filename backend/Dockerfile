@@ -1,36 +1,71 @@
-# ─── Stage 1: Build ────────────────────────────────────────────
-FROM eclipse-temurin:21-jdk-alpine AS build
+# ═══════════════════════════════════════════════════════════════
+# Stage 1 — Dependency cache
+# Pulls all Maven deps in isolation so this layer is only
+# invalidated when pom.xml changes, not on every source edit.
+# ═══════════════════════════════════════════════════════════════
+FROM eclipse-temurin:21-jdk-alpine AS deps
 WORKDIR /app
 
-# Copy Maven wrapper and pom first (layer caching — only re-downloads deps when pom changes)
 COPY mvnw mvnw.cmd pom.xml ./
 COPY .mvn .mvn
-RUN chmod +x mvnw && ./mvnw dependency:go-offline -q
+RUN chmod +x mvnw && \
+    ./mvnw dependency:go-offline --no-transfer-progress -q
 
-# Copy source and build (skip tests — run separately in CI)
+
+# ═══════════════════════════════════════════════════════════════
+# Stage 2 — Build
+# ═══════════════════════════════════════════════════════════════
+FROM deps AS build
+
 COPY src ./src
-RUN ./mvnw package -DskipTests -q
+RUN ./mvnw package -DskipTests --no-transfer-progress -q && \
+    java -Djarmode=layertools -jar target/*.jar extract --destination target/extracted
 
-# ─── Stage 2: Runtime ──────────────────────────────────────────
+
+# ═══════════════════════════════════════════════════════════════
+# Stage 3 — Runtime (final image shipped to Render)
+# ═══════════════════════════════════════════════════════════════
 FROM eclipse-temurin:21-jre-alpine AS runtime
+
+RUN apk add --no-cache curl && \
+    addgroup -S appgroup && \
+    adduser  -S appuser -G appgroup
+
 WORKDIR /app
 
-# Non-root user for security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+COPY --from=build --chown=appuser:appgroup /app/target/extracted/dependencies          ./
+COPY --from=build --chown=appuser:appgroup /app/target/extracted/spring-boot-loader    ./
+COPY --from=build --chown=appuser:appgroup /app/target/extracted/snapshot-dependencies ./
+COPY --from=build --chown=appuser:appgroup /app/target/extracted/application           ./
+
 USER appuser
 
-# Copy the fat JAR from build stage
-COPY --from=build /app/target/*.jar app.jar
+# JVM tuning for Render free tier (512 MB RAM, 0.1 shared CPU)
+ENV JAVA_OPTS="\
+  -XX:+UseContainerSupport \
+  -XX:MaxRAMPercentage=75.0 \
+  -XX:InitialRAMPercentage=50.0 \
+  -XX:+UseG1GC \
+  -XX:+ExitOnOutOfMemoryError \
+  -XX:+HeapDumpOnOutOfMemoryError \
+  -XX:HeapDumpPath=/tmp/heapdump.hprof \
+  -Djava.security.egd=file:/dev/./urandom \
+  -Dspring.profiles.active=prod"
 
-# JVM tuning for containers
-ENV JAVA_OPTS="-XX:+UseContainerSupport \
-               -XX:MaxRAMPercentage=75.0 \
-               -XX:+UseG1GC \
-               -Djava.security.egd=file:/dev/./urandom"
+# Render injects PORT automatically; fall back to 8080 for local runs.
+ENV PORT=8080
+EXPOSE ${PORT}
 
-EXPOSE 8080
+# start-period=90s: free-tier cold-start (JVM + Flyway + Hikari) can take 60-80s
+HEALTHCHECK \
+  --interval=30s \
+  --timeout=10s \
+  --start-period=90s \
+  --retries=3 \
+  CMD curl -fs http://localhost:${PORT}/actuator/health | grep -q '"status":"UP"' || exit 1
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
-    CMD wget -qO- http://localhost:8080/actuator/health || exit 1
-
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+# exec replaces the shell so SIGTERM reaches the JVM directly → graceful shutdown
+ENTRYPOINT ["sh", "-c", \
+  "exec java ${JAVA_OPTS} \
+   -Dserver.port=${PORT} \
+   org.springframework.boot.loader.launch.JarLauncher"]

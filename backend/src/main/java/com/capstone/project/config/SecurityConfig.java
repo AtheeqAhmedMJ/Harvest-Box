@@ -19,8 +19,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Stateless JWT security — Spring Security handles CORS via CorsConfig.
- * Auth endpoints are public; everything else requires a valid JWT.
+ * Stateless JWT security.
+ *
+ * Key change vs original: OPTIONS requests are explicitly permitted before
+ * the JWT filter runs. Without this, Spring Security intercepts CORS
+ * preflight requests (which carry no Authorization header) and returns 401,
+ * causing every credentialed cross-origin request from the Vercel frontend
+ * to fail with a CORS error in the browser — even though CorsConfig is
+ * correctly configured.
+ *
+ * Order of events for a cross-origin POST from harvest-box-chi.vercel.app:
+ *   1. Browser sends OPTIONS preflight  → must return 200, no JWT needed
+ *   2. Browser sends actual POST        → JWT required
  */
 @Configuration
 public class SecurityConfig {
@@ -33,18 +43,19 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationEntryPoint customAuthenticationEntryPoint() {
-        return (request, response, authException) -> {
+        return (HttpServletRequest request, HttpServletResponse response,
+                AuthenticationException authException) -> {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("timestamp", Instant.now().toString());
-            errorResponse.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-            errorResponse.put("error", "Unauthorized");
-            errorResponse.put("message", "Authentication required: " + authException.getMessage());
-            errorResponse.put("path", request.getRequestURI());
-            
-            response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("timestamp", Instant.now().toString());
+            body.put("status",    HttpServletResponse.SC_UNAUTHORIZED);
+            body.put("error",     "Unauthorized");
+            body.put("message",   "Authentication required: " + authException.getMessage());
+            body.put("path",      request.getRequestURI());
+
+            response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         };
     }
 
@@ -52,18 +63,27 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            // Stateless — no session, no CSRF needed
+            // Stateless API — no session, no CSRF token needed
             .csrf(csrf -> csrf.disable())
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-            // CORS is handled by CorsConfig bean
+            // Delegate CORS to CorsConfig — do NOT set a custom CorsConfigurationSource
+            // here or it will override CorsConfig and ignore the allowed-origins property.
             .cors(cors -> {})
 
-            // Custom authentication entry point for 401 responses
-            .exceptionHandling(eh -> eh.authenticationEntryPoint(customAuthenticationEntryPoint()))
+            .exceptionHandling(eh -> eh
+                    .authenticationEntryPoint(customAuthenticationEntryPoint()))
 
             .authorizeHttpRequests(auth -> auth
-                // Public auth endpoints
+
+                // ── CORS preflight ──────────────────────────────────────────
+                // OPTIONS carries no Authorization header by design.
+                // Must be permitted before the JWT filter runs, otherwise
+                // Spring Security returns 401 and the browser never sends
+                // the actual request (visible as a CORS error in DevTools).
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // ── Public auth endpoints ───────────────────────────────────
                 .requestMatchers(HttpMethod.POST,
                     "/api/v1/auth/register",
                     "/api/v1/auth/login",
@@ -71,7 +91,7 @@ public class SecurityConfig {
                     "/api/v1/auth/resend-otp"
                 ).permitAll()
 
-                // Dev tools
+                // ── Dev / ops tools ─────────────────────────────────────────
                 .requestMatchers(
                     "/h2-console/**",
                     "/swagger-ui/**",
@@ -80,14 +100,13 @@ public class SecurityConfig {
                     "/actuator/health"
                 ).permitAll()
 
-                // Everything else requires authentication
+                // ── Everything else requires a valid JWT ────────────────────
                 .anyRequest().authenticated()
             )
 
-            // JWT filter runs before Spring's username/password filter
             .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // Allow H2 console frames in dev
+        // Allow H2 console iframes in dev (no-op in prod since H2 is not enabled)
         http.headers(h -> h.frameOptions(fo -> fo.sameOrigin()));
 
         return http.build();
