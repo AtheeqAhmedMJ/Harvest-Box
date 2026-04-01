@@ -48,10 +48,13 @@ app = FastAPI(
     version="2.0.0",
     lifespan=lifespan,
 )
-@app.get("/health")
-def health():
-    return {"status": "healthy"}
-
+@app.get("/")
+def root():
+    return {
+        "service": "Crop Health ML Service",
+        "status": "running",
+        "version": "2.0.0"
+    }
 # ── CORS ─────────────────────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
