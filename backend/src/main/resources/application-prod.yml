@@ -1,19 +1,24 @@
-# ─── PROD PROFILE ───────────────────────────────────────────────
+# ─── PROD PROFILE ────────────────────────────────────────────────────────────
 # ALL secrets come from environment variables — never hardcoded.
-# Set SPRING_PROFILES_ACTIVE=prod in your deployment environment.
+# Set SPRING_PROFILES_ACTIVE=prod in Render's environment settings.
 
 spring:
+
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
   datasource:
-    # ✅ updated comment (harvest_box)
-    url: ${DB_URL}               # e.g. jdbc:postgresql://host:5432/harvest_box
+    url:      ${DB_URL}        # jdbc:postgresql://db.xxx.supabase.co:5432/postgres?sslmode=require
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 20
-      minimum-idle: 5
+      # Free-tier Render: 512 MB RAM, 0.1 CPU — pool of 20 wastes connections
+      maximum-pool-size: 3
+      minimum-idle: 1
       idle-timeout: 300000
       connection-timeout: 20000
+      keepalive-time: 60000
       leak-detection-threshold: 60000
 
   jpa:
@@ -42,6 +47,14 @@ spring:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 
+server:
+  shutdown: graceful
+  tomcat:
+    threads:
+      max: 20
+      min-spare: 2
+    accept-count: 50
+
 aws:
   region: ${AWS_REGION:ap-south-1}
   s3:
@@ -51,20 +64,33 @@ aws:
     secret-key: ${AWS_SECRET_ACCESS_KEY}
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret:    ${JWT_SECRET}
   expiry-ms: ${JWT_EXPIRY_MS:604800000}
 
 ml:
-  base-url: ${ML_BASE_URL}
+  base-url:           ${ML_BASE_URL}
+  connect-timeout-ms: ${ML_CONNECT_TIMEOUT_MS:60000}
+  read-timeout-ms:    ${ML_READ_TIMEOUT_MS:120000}
+
+weather:
+  api-key: ${WEATHER_API_KEY}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
 
 logging:
   level:
     com.capstone.project: INFO
-    org.springframework: WARN
-
-  # ✅ renamed log path
-  file:
-    name: /var/log/harvest-box/app.log
-# Weather proxy — server-side key, never exposed to frontend
-weather:
-  api-key: ${WEATHER_API_KEY}
+    org.springframework:  WARN
+    com.zaxxer.hikari:    WARN
+  # Render captures stdout automatically — no file appender needed.
+  # Writing to /var/log/... will crash the app on startup because
+  # that directory does not exist on Render's ephemeral filesystem.
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

@@ -20,12 +20,12 @@
     <artifactId>project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>agripulse</name>
+    <name>harvest-box</name>
     <description>Production Grade Crop Monitoring System</description>
 
     <properties>
         <java.version>21</java.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>  <!-- FIXED: was 1.6.3 (does not exist) -->
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
     </properties>
 
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.25.16</version>  <!-- FIXED: was 2.41.14 (does not exist) -->
+            <version>2.25.16</version>
         </dependency>
 
         <!-- Email -->
@@ -157,7 +157,8 @@
             <version>${mapstruct.version}</version>
         </dependency>
 
-        <!-- DevTools -->
+        <!-- DevTools (no-op in prod JARs — optional=true means it is never
+             packaged into the fat JAR or transitively pulled by dependents) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -198,7 +199,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>  <!-- FIXED: bumped from 3.11.0 for better JDK 21 support -->
+                <version>3.11.0</version>
                 <configuration>
                     <source>21</source>
                     <target>21</target>
@@ -217,21 +218,6 @@
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>0.2.0</version>
                         </path>
-                        <dependency>
-                            <groupId>me.paulschwarz</groupId>
-                            <artifactId>spring-dotenv</artifactId>
-                            <version>3.0.0</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>io.github.cdimascio</groupId>
-                            <artifactId>dotenv-java</artifactId>
-                            <version>3.0.0</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>me.paulschwarz</groupId>
-                            <artifactId>spring-dotenv</artifactId>
-                            <version>4.0.0</version>
-                        </dependency>
 
                         <!-- 3. MapStruct last -->
                         <path>

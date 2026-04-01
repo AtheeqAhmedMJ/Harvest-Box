@@ -2,8 +2,11 @@ spring:
   application:
     name: harvest-box
 
-  profiles:
-    active: dev
+  # Do NOT set spring.profiles.active here.
+  # Active profile is injected at runtime:
+  #   - Render/prod: -Dspring.profiles.active=prod  (set in Dockerfile JAVA_OPTS)
+  #   - Local dev:   SPRING_PROFILES_ACTIVE=dev in your shell or .env
+  # Hardcoding it here overrides those and breaks prod deployments.
 
   servlet:
     multipart:
@@ -18,16 +21,20 @@ spring:
 
 server:
   port: 8080
+  shutdown: graceful
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/plain
     min-response-size: 1024
 
+spring.lifecycle:
+  timeout-per-shutdown-phase: 20s
+
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info
   endpoint:
     health:
       show-details: when-authorized
