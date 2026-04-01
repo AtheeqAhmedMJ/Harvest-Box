@@ -508,5 +508,22 @@
       "Healthy": 99.99,
       "Powdery_Mildew": 0.0
     }
+  },
+  {
+    "timestamp": "2026-04-01T10:46:16",
+    "user_id": "1",
+    "field_name": "A",
+    "row": 2,
+    "col": 1,
+    "prediction": "Healthy",
+    "confidence": 99.99,
+    "severity": "none",
+    "fusion_method": "local_only",
+    "all_probs": {
+      "Black_Rot": 0.0,
+      "Downy_Mildew": 0.0,
+      "Healthy": 99.99,
+      "Powdery_Mildew": 0.0
+    }
   }
 ]
