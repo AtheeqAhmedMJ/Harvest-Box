@@ -25,7 +25,6 @@ import time
 from typing import Any
 
 import requests
-import google.generativeai as genai
 
 from config.settings import settings
 from utils.logger import logger
