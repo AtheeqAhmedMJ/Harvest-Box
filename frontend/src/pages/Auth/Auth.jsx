@@ -15,6 +15,35 @@ function validate(form, isLogin) {
   return null;
 }
 
+// ── Toast system ──────────────────────────────────────────────────────────────
+function useToast() {
+  const [toasts, setToasts] = useState([]);
+
+  const show = useCallback((message, type = "info", duration = 4000) => {
+    const id = Date.now() + Math.random();
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), duration);
+  }, []);
+
+  return { toasts, show };
+}
+
+function ToastContainer({ toasts }) {
+  if (!toasts.length) return null;
+  return (
+    <div className="auth-toast-stack">
+      {toasts.map(t => (
+        <div key={t.id} className={`auth-toast auth-toast-${t.type}`}>
+          <span className="auth-toast-icon">
+            {t.type === "success" ? "✓" : t.type === "error" ? "✕" : "ℹ"}
+          </span>
+          {t.message}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Auth() {
   const navigate  = useNavigate();
   const location  = useLocation();
@@ -28,13 +57,12 @@ export default function Auth() {
   const [step, setStep]       = useState("form"); // "form" | "otp"
   const [timer, setTimer]     = useState(30);
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg]         = useState({ text: "", type: "" }); // type: "error" | "success"
+
+  const { toasts, show: showToast } = useToast();
 
   const notify = useCallback((text, type = "error") => {
-    setMsg({ text, type });
-    const t = setTimeout(() => setMsg({ text: "", type: "" }), 4000);
-    return () => clearTimeout(t);
-  }, []);
+    showToast(text, type);
+  }, [showToast]);
 
   const getErrorMessage = (err, fallback = "Something went wrong.") => {
     return (
@@ -44,6 +72,7 @@ export default function Auth() {
       fallback
     );
   };
+
   // OTP countdown
   useEffect(() => {
     if (step === "otp" && timer > 0) {
@@ -57,12 +86,10 @@ export default function Auth() {
     setForm({ name: "", email: "", password: "" });
     setOtp("");
     setStep("form");
-    setMsg({ text: "", type: "" });
   }, [isLogin]);
 
   function handleChange(e) {
     setForm(p => ({ ...p, [e.target.name]: e.target.value }));
-    if (msg.type === "error") setMsg({ text: "", type: "" });
   }
 
   async function handleSubmit(e) {
@@ -117,6 +144,14 @@ export default function Auth() {
     } finally {
       setLoading(false);
     }
+  }
+
+  // Forgot Password Handler
+  function handleForgotPassword() {
+    notify(
+      "Forgot password? Mail us at mediasphere680@gmail.com",
+      "success"
+    );
   }
 
   return (
@@ -205,7 +240,18 @@ export default function Auth() {
                 </div>
               </div>
 
-              {msg.text && <div className={`auth-msg auth-msg-${msg.type}`}>{msg.text}</div>}
+              {/* Forgot Password */}
+              {isLogin && (
+                <div className="auth-forgot">
+                  <button
+                    type="button"
+                    className="auth-forgot-btn"
+                    onClick={handleForgotPassword}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              )}
 
               <button type="submit" className="primary-btn auth-submit" disabled={loading}>
                 {loading
@@ -223,7 +269,6 @@ export default function Auth() {
                 Enter the 6-digit code sent to <strong>{form.email}</strong>
               </p>
               <OtpInput value={otp} onChange={setOtp} onComplete={handleVerifyOtp} />
-              {msg.text && <div className={`auth-msg auth-msg-${msg.type}`}>{msg.text}</div>}
               <button
                 className="primary-btn auth-submit"
                 onClick={() => handleVerifyOtp(otp)}
@@ -242,6 +287,9 @@ export default function Auth() {
           )}
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} />
     </div>
   );
 }
