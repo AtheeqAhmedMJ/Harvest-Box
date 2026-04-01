@@ -62,7 +62,8 @@ aws:
   credentials:
     access-key: ${AWS_ACCESS_KEY_ID}
     secret-key: ${AWS_SECRET_ACCESS_KEY}
-
+  server:
+    port: ${PORT:10000}
 jwt:
   secret:    ${JWT_SECRET}
   expiry-ms: ${JWT_EXPIRY_MS:604800000}
