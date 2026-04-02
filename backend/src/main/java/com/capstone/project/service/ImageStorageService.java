@@ -20,14 +20,18 @@ import java.util.UUID;
  * - Validates MIME type and file size before uploading.
  * - Bucket name is config-driven (no hardcoded string).
  * - User-scoped keys: uploads/{userId}/{uuid}_{originalName}
+ *
+ * The @PostConstruct only VERIFIES the bucket exists — it never tries to
+ * create it. The IAM policy for crop-health-user explicitly denies
+ * s3:CreateBucket, and the bucket already exists in ap-south-1.
  */
 @Service
 public class ImageStorageService {
 
     private static final Logger log = LoggerFactory.getLogger(ImageStorageService.class);
 
-    private static final Set<String> ALLOWED_TYPES   = Set.of("image/jpeg", "image/png", "image/webp");
-    private static final long        MAX_SIZE_BYTES   = 5 * 1024 * 1024L; // 5 MB
+    private static final Set<String> ALLOWED_TYPES = Set.of("image/jpeg", "image/png", "image/webp");
+    private static final long        MAX_SIZE_BYTES = 5 * 1024 * 1024L; // 5 MB
 
     private final S3Client s3Client;
 
@@ -43,41 +47,29 @@ public class ImageStorageService {
 
     @PostConstruct
     public void initializeBucket() {
+        // Just verify the bucket is reachable — never try to create it.
+        // The bucket is pre-created in AWS console; the IAM user only needs
+        // s3:HeadBucket, s3:PutObject, s3:GetObject, s3:DeleteObject, s3:ListBucket.
         try {
-            if (!isBucketExists()) {
-                createBucket();
-            }
-            log.info("✅ S3 bucket '{}' is ready", bucketName);
-        } catch (Exception ex) {
-            log.warn("⚠ Failed to initialize S3 bucket: {}. Images may fail to upload.", ex.getMessage());
-        }
-    }
-
-    private boolean isBucketExists() {
-        try {
-            HeadBucketRequest headRequest = HeadBucketRequest.builder().bucket(bucketName).build();
-            s3Client.headBucket(headRequest);
-            return true;
+            s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
+            log.info("✅ S3 bucket '{}' is ready in region {}", bucketName, region);
         } catch (NoSuchBucketException ex) {
-            return false;
+            log.error("❌ S3 bucket '{}' does not exist — create it in the AWS console in region {}",
+                    bucketName, region);
+        } catch (S3Exception ex) {
+            if (ex.statusCode() == 403) {
+                // 403 on HeadBucket can mean the bucket EXISTS but the IAM user
+                // lacks s3:ListBucket. Uploads may still work — log a warning only.
+                log.warn("⚠ S3 bucket '{}' exists but HeadBucket returned 403. " +
+                        "Add s3:ListBucket to the IAM policy if listing is needed. " +
+                        "Uploads will still work if s3:PutObject is granted.", bucketName);
+            } else {
+                log.warn("⚠ Could not verify S3 bucket '{}': {} (status={}). " +
+                        "Uploads may fail.", bucketName, ex.getMessage(), ex.statusCode());
+            }
         } catch (Exception ex) {
-            log.warn("Error checking bucket existence: {}", ex.getMessage());
-            return false;
-        }
-    }
-
-    private void createBucket() {
-        try {
-            CreateBucketRequest createRequest = CreateBucketRequest.builder()
-                    .bucket(bucketName)
-                    .build();
-            s3Client.createBucket(createRequest);
-            log.info("Created S3 bucket: {}", bucketName);
-        } catch (BucketAlreadyOwnedByYouException ex) {
-            log.info("Bucket already exists and is owned by you: {}", bucketName);
-        } catch (Exception ex) {
-            log.error("Failed to create S3 bucket: {}", ex.getMessage());
-            throw ex;
+            log.warn("⚠ Could not verify S3 bucket '{}': {}. Uploads may fail.",
+                    bucketName, ex.getMessage());
         }
     }
 
@@ -99,6 +91,7 @@ public class ImageStorageService {
             String url = "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + key;
             log.info("Uploaded image for userId={} key={}", userId, key);
             return url;
+
         } catch (NoSuchBucketException ex) {
             log.error("S3 bucket '{}' does not exist", bucketName);
             throw ApiException.internalServerError("Image storage is not configured. Please contact support.");
@@ -123,7 +116,6 @@ public class ImageStorageService {
 
     private String sanitizeFilename(String originalFilename) {
         if (originalFilename == null || originalFilename.isBlank()) return "image";
-        // Strip path traversal and keep only safe characters
         return originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
     }
 }
