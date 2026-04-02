@@ -13,18 +13,20 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
+      # Supabase free tier closes idle connections after ~5 min.
+      # These settings keep the pool alive and validate before use.
       maximum-pool-size: 3
       minimum-idle: 1
-      idle-timeout: 300000
-      connection-timeout: 20000
-      keepalive-time: 60000
+      idle-timeout: 180000          # 3 min — return idle connections before Supabase kills them
+      connection-timeout: 20000     # 20 s — fail fast if pool is exhausted
+      keepalive-time: 60000         # ping every 60 s to keep connections alive
+      max-lifetime: 300000          # 5 min — recycle connections before Supabase drops them
       leak-detection-threshold: 60000
+      # Validate connection before handing to app — catches stale connections
+      connection-test-query: SELECT 1
 
   jpa:
     hibernate:
-      # 'validate' fires a DB connection at startup to check schema — this times
-      # out on Render free tier via Supabase's transaction pooler (port 6543).
-      # Schema is already correct and managed via Supabase SQL editor.
       ddl-auto: none
     show-sql: false
     properties:
@@ -36,9 +38,6 @@ spring:
         order_updates: true
 
   flyway:
-    # Disabled — migrations V1 and V2 applied manually in Supabase SQL editor.
-    # Supabase's pooler does not support the DDL transactions Flyway needs.
-    # flyway_schema_history table already tracks both migrations.
     enabled: false
 
   mail:
