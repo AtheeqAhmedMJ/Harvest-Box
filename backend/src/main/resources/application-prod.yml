@@ -22,7 +22,10 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      # 'validate' fires a DB connection at startup to check schema — this times
+      # out on Render free tier via Supabase's transaction pooler (port 6543).
+      # Schema is already correct and managed via Supabase SQL editor.
+      ddl-auto: none
     show-sql: false
     properties:
       hibernate:
@@ -33,12 +36,9 @@ spring:
         order_updates: true
 
   flyway:
-    # Disabled — migrations V1 and V2 were applied manually via Supabase SQL editor.
-    # Supabase's transaction pooler (port 6543) does not support the DDL transactions
-    # Flyway needs, and the session pooler (port 5432) times out from Render free tier.
-    # The flyway_schema_history table in Supabase already tracks both migrations.
-    # To run future migrations: apply them manually in Supabase SQL editor, then
-    # insert a row into flyway_schema_history to keep the history in sync.
+    # Disabled — migrations V1 and V2 applied manually in Supabase SQL editor.
+    # Supabase's pooler does not support the DDL transactions Flyway needs.
+    # flyway_schema_history table already tracks both migrations.
     enabled: false
 
   mail:
