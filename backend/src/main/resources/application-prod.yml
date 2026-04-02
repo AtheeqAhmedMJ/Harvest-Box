@@ -33,16 +33,13 @@ spring:
         order_updates: true
 
   flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-on-migrate: true
-    # Supabase transaction pooler (port 6543) doesn't support DDL transactions.
-    # Flyway needs its own direct JDBC URL pointing to the session pooler (5432)
-    # or the direct host so migrations run outside the transaction pooler.
-    # We pass a separate URL just for Flyway; the app uses 6543 for all queries.
-    url:      ${FLYWAY_URL:${DB_URL}}
-    user:     ${FLYWAY_USERNAME:${DB_USERNAME}}
-    password: ${FLYWAY_PASSWORD:${DB_PASSWORD}}
+    # Disabled — migrations V1 and V2 were applied manually via Supabase SQL editor.
+    # Supabase's transaction pooler (port 6543) does not support the DDL transactions
+    # Flyway needs, and the session pooler (port 5432) times out from Render free tier.
+    # The flyway_schema_history table in Supabase already tracks both migrations.
+    # To run future migrations: apply them manually in Supabase SQL editor, then
+    # insert a row into flyway_schema_history to keep the history in sync.
+    enabled: false
 
   mail:
     host: smtp.gmail.com
