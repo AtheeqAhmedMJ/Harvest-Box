@@ -1,4 +1,4 @@
-# 🌾 Harvest Box — AI-Powered Crop Health Monitoring System
+# Harvest Box — AI-Powered Crop Health Monitoring System
 
 <div align="center">
 
